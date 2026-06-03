@@ -9,14 +9,64 @@ const supabase = (supabaseUrl && supabaseKey && window.supabase) ? window.supaba
 window.BC_SUPABASE_CLIENT = supabase;
 
 /* ───────────────────── persistence ───────────────────── */
+window.BC_PLANNER_CACHE = {};
+let isHydrated = false;
 const LS_PREFIX = "bcf.v1.";
-function lsGet(key, fallback){
-  try { const v = localStorage.getItem(LS_PREFIX + key); return v == null ? fallback : JSON.parse(v); }
-  catch(e){ return fallback; }
+const customerId = (window.BC_CUSTOMER && window.BC_CUSTOMER.id) || "test-customer";
+const debounceTimers = {};
+
+if (supabase && customerId) {
+  supabase.from('planner_state').select('key, value').eq('customer_id', customerId)
+    .then(({ data, error }) => {
+      if (error) {
+        console.error("Supabase load error:", error);
+      } else if (data) {
+        data.forEach(row => {
+          window.BC_PLANNER_CACHE[row.key] = row.value;
+          try { window.dispatchEvent(new CustomEvent("bcf-local", { detail: { key: row.key } })); } catch(e){}
+        });
+      }
+      isHydrated = true;
+      try { window.dispatchEvent(new Event("bcf-progress")); } catch(e){}
+    });
+} else {
+  isHydrated = true;
 }
+
+function lsGet(key, fallback){
+  if (window.BC_PLANNER_CACHE && window.BC_PLANNER_CACHE.hasOwnProperty(key)) {
+    return window.BC_PLANNER_CACHE[key];
+  }
+  try {
+    const v = localStorage.getItem(LS_PREFIX + key);
+    if (v != null) {
+      const parsed = JSON.parse(v);
+      window.BC_PLANNER_CACHE[key] = parsed;
+      return parsed;
+    }
+  } catch(e){}
+  return fallback;
+}
+
 function lsSet(key, val){
+  if (window.BC_PLANNER_CACHE) {
+    window.BC_PLANNER_CACHE[key] = val;
+  }
   try { localStorage.setItem(LS_PREFIX + key, JSON.stringify(val)); } catch(e){}
   try { window.dispatchEvent(new CustomEvent("bcf-local", { detail: { key } })); } catch(e){}
+
+  if (isHydrated && supabase && customerId) {
+    if (debounceTimers[key]) clearTimeout(debounceTimers[key]);
+    debounceTimers[key] = setTimeout(() => {
+      supabase.from('planner_state').upsert({
+        customer_id: customerId,
+        key: key,
+        value: val
+      }).then(({ error }) => {
+        if (error) console.error("Supabase upsert error for key " + key + ":", error);
+      });
+    }, 500);
+  }
 }
 function useLocal(key, initial){
   const [val, setVal] = useState(() => lsGet(key, initial));
