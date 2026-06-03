@@ -2,6 +2,12 @@
    Exports to window at the bottom. */
 const { useState, useEffect, useRef, useCallback } = React;
 
+/* ───────────────────── Supabase Client ───────────────────── */
+const supabaseUrl = window.BC_SUPABASE_URL || "";
+const supabaseKey = window.BC_SUPABASE_KEY || "";
+const supabase = (supabaseUrl && supabaseKey && window.supabase) ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
+window.BC_SUPABASE_CLIENT = supabase;
+
 /* ───────────────────── persistence ───────────────────── */
 const LS_PREFIX = "bcf.v1.";
 function lsGet(key, fallback){
