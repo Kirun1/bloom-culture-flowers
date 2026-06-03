@@ -203,6 +203,22 @@ window.addEventListener('error', function(e){
     e.preventDefault();
   }
 }, true);
+
+// Configure customer and Supabase overrides from query string
+(() => {
+  const params = new URLSearchParams(window.location.search);
+  const cid = params.get('cid');
+  const cemail = params.get('cemail');
+  if (cid) {
+    window.BC_CUSTOMER = { id: cid, email: cemail || '' };
+  }
+  const sbUrl = params.get('sb_url');
+  const sbKey = params.get('sb_key');
+  if (sbUrl && sbKey) {
+    window.BC_SUPABASE_URL = sbUrl;
+    window.BC_SUPABASE_KEY = sbKey;
+  }
+})();
 </script>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>

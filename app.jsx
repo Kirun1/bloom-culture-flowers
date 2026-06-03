@@ -93,7 +93,7 @@ function App(){
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  const showGate = t.showGate && !entered;
+  const showGate = t.showGate && !entered && !window.BC_CUSTOMER;
 
   const curLabel = view === "home" ? "Start Here" : (window.BC.byId[view] ? window.BC.byId[view].nav : "");
 
