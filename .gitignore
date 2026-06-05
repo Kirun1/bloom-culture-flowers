@@ -1,0 +1,77 @@
+# =============================================================
+# Bloom Culture DIY Planner — .gitignore
+# =============================================================
+
+# ----------------------------
+# Local dev state (do not deploy)
+# ----------------------------
+.image-slots.state.json
+
+# ----------------------------
+# Shopify Liquid templates (managed in bloom-culture-theme repo)
+# ----------------------------
+*.liquid
+
+# ----------------------------
+# Documentation & handoff files (not needed by the app)
+# ----------------------------
+*.md
+DEPLOYMENT_GUIDE.md
+ARCHITECTURE_OVERVIEW.md
+DEVELOPER_HANDOFF.md
+DEVELOPER_COVER_NOTE.md
+Developer\ Outreach*.md
+Developer\ Outreach*.txt
+Developer\ Handoff*.txt
+favicon-datauri.txt
+
+# ----------------------------
+# Landing page drafts & source files (Shopify-side only)
+# ----------------------------
+Shopify\ Landing\ Page\ v*.txt
+Shopify\ Landing\ Page\ v*.html
+Shopify\ Landing\ Page\ FINAL.txt
+Flower\ Planner\ Landing\ Page*.html
+Flower\ Planner\ Landing\ Page*.txt
+Flower\ Planner\ Page*.html
+Flower\ Planner\ Page*.txt
+Landing\ Page\ -\ Shopify*.txt
+Landing\ Page\ -\ Shopify*.html
+Landing\ Page\ -\ Shopify\ FINAL.txt
+landing*.html
+landing-shopify.html
+landing-nolologo.html
+
+# ----------------------------
+# Pinterest & preview tools (separate utilities)
+# ----------------------------
+pinterest-pins.html
+preview.html
+preview-app.jsx
+Planner\ Preview*.html
+
+# ----------------------------
+# Old/alternate build output folders
+# ----------------------------
+index.html-fullplanner-dist/
+index.html-landing-dist/
+index.html-preview-dist/
+
+# ----------------------------
+# Design & handoff assets (not served by the app)
+# ----------------------------
+handoff/
+pins/
+screens/
+
+# ----------------------------
+# Dev screenshots in uploads (not used by the app at runtime)
+# ----------------------------
+uploads/Screen\ Shot\ *.png
+uploads/Screen\ Shot*.png
+
+# ----------------------------
+# Source/draft documents
+# ----------------------------
+Budget\ Estimate\ Prices\ -editable-.csv
+DIY\ Flower\ Pricing\ -marked\ up-.html
