@@ -1,0 +1,281 @@
+{% comment %}
+  ============================================================
+  Bloom Culture — Shopify Order Status Page Additional Script
+  
+  What it does:
+    • Detects if the order contains the DIY Wedding Flower Planner
+    • Injects a branded "What's Next" card immediately after checkout
+    • Gives customers instant clarity on how to access their planner
+    • Directly addresses the "running in circles" confusion Alison noted
+  ============================================================
+{% endcomment %}
+
+{% assign purchased_planner = false %}
+{% for line_item in checkout.line_items %}
+  {% if line_item.title contains 'DIY Wedding Flower Planner'
+     or line_item.title contains 'Flower Planner'
+     or line_item.product.handle == 'diy-wedding-flower-planner' %}
+    {% assign purchased_planner = true %}
+  {% endif %}
+{% endfor %}
+
+{% if purchased_planner %}
+<style>
+  /* ── Bloom Culture Planner Widget ── */
+  #bcf-thankyou-widget {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    box-sizing: border-box;
+    margin: 28px 0 10px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(43, 76, 63, 0.14);
+    border: 1.5px solid #c8ddd6;
+  }
+
+  #bcf-thankyou-widget * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Header strip */
+  #bcf-thankyou-widget .bcf-header {
+    background: #2b4c3f;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  #bcf-thankyou-widget .bcf-header .bcf-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  #bcf-thankyou-widget .bcf-header-text {
+    flex: 1;
+  }
+
+  #bcf-thankyou-widget .bcf-kicker {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(247, 246, 240, 0.7);
+    margin-bottom: 3px;
+    font-weight: 600;
+  }
+
+  #bcf-thankyou-widget .bcf-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #f7f6f0;
+    line-height: 1.2;
+  }
+
+  /* Body */
+  #bcf-thankyou-widget .bcf-body {
+    background: #f7f9f7;
+    padding: 22px 24px 24px;
+  }
+
+  #bcf-thankyou-widget .bcf-lead {
+    font-size: 14px;
+    color: #3d5248;
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  #bcf-thankyou-widget .bcf-lead strong {
+    color: #2b4c3f;
+  }
+
+  /* Steps */
+  #bcf-thankyou-widget .bcf-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  #bcf-thankyou-widget .bcf-steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13.5px;
+    color: #3d5248;
+    line-height: 1.4;
+  }
+
+  #bcf-thankyou-widget .bcf-step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #2b4c3f;
+    color: #f7f6f0;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* CTA button */
+  #bcf-thankyou-widget .bcf-cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #2b4c3f;
+    color: #f7f6f0 !important;
+    text-decoration: none !important;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 15px 24px;
+    border-radius: 10px;
+    letter-spacing: 0.01em;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 10px rgba(43, 76, 63, 0.22);
+  }
+
+  #bcf-thankyou-widget .bcf-cta:hover {
+    background: #1e3830;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(43, 76, 63, 0.3);
+  }
+
+  /* Email nudge */
+  #bcf-thankyou-widget .bcf-nudge {
+    margin-top: 13px;
+    font-size: 12px;
+    color: #7a9489;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  #bcf-thankyou-widget .bcf-nudge strong {
+    color: #2b4c3f;
+  }
+
+  /* Divider */
+  #bcf-thankyou-widget .bcf-divider {
+    border: none;
+    border-top: 1px solid #dce8e3;
+    margin: 18px 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    #bcf-thankyou-widget .bcf-header {
+      padding: 16px 18px;
+    }
+    #bcf-thankyou-widget .bcf-body {
+      padding: 18px 18px 20px;
+    }
+  }
+</style>
+
+<div id="bcf-thankyou-widget">
+
+  <!-- Header -->
+  <div class="bcf-header">
+    <div class="bcf-icon">🌸</div>
+    <div class="bcf-header-text">
+      <div class="bcf-kicker">Your planner is ready</div>
+      <div class="bcf-title">Start Your DIY Flower Planner</div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="bcf-body">
+
+    <p class="bcf-lead">
+      Your interactive planning workspace is set up and waiting for you —
+      <strong>here's exactly how to get in:</strong>
+    </p>
+
+    <ol class="bcf-steps">
+      <li>
+        <div class="bcf-step-num">1</div>
+        <div>
+          <strong>Click "Start Your Planner" below</strong> — or visit
+          <em>bloomcultureflowers.com/pages/diy-flower-planner</em> any time.
+        </div>
+      </li>
+      <li>
+        <div class="bcf-step-num">2</div>
+        <div>
+          <strong>Log in with the same email address</strong> you used for this
+          order — your planner is linked to your Bloom Culture account.
+        </div>
+      </li>
+      <li>
+        <div class="bcf-step-num">3</div>
+        <div>
+          <strong>Start with the Mood Board</strong> to define your style, then
+          work through the <em>Checklist</em> to build your flower list.
+        </div>
+      </li>
+    </ol>
+
+    <a
+      href="https://bloomcultureflowers.com/pages/diy-flower-planner"
+      class="bcf-cta"
+      id="bcf-start-planner-btn"
+    >
+      Start Your Planner &nbsp;
+    </a>
+
+    <hr class="bcf-divider" />
+
+    <p class="bcf-nudge">
+      <strong>Check your confirmation email</strong> — we've also sent your
+      access instructions there so you can find this link any time.
+      Your planner saves automatically and works on any device.
+    </p>
+
+  </div>
+</div>
+
+<script>
+  // Move the widget to appear near the top of the order confirmation content,
+  // right after the "Order confirmed" heading for maximum visibility.
+  (function () {
+    var widget = document.getElementById("bcf-thankyou-widget");
+    if (!widget) return;
+
+    // Try to place after the main confirmation heading / thank-you banner
+    var anchors = [
+      ".os-step__title",          // Shopify default thank-you heading
+      ".os-header",               // legacy theme header
+      '[data-step="thank_you"]',  // newer checkout UI
+      ".main__header",
+    ];
+
+    var placed = false;
+    for (var i = 0; i < anchors.length; i++) {
+      var el = document.querySelector(anchors[i]);
+      if (el && el.parentNode) {
+        el.parentNode.insertBefore(widget, el.nextSibling);
+        placed = true;
+        break;
+      }
+    }
+
+    // Fallback: inject at the top of <main> or <body>
+    if (!placed) {
+      var main = document.querySelector("main") || document.body;
+      main.insertBefore(widget, main.firstChild);
+    }
+  })();
+</script>
+{% endif %}
