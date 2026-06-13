@@ -1451,7 +1451,7 @@ function VesselGuide({ vessels, accent }) {
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 15, background: "var(--paper)",
           border: "1px solid var(--line)", borderRadius: "var(--radius)", padding: "12px 16px 12px 12px", boxShadow: "var(--shadow-sm)" }}>
             {React.createElement("image-slot", {
-            id: v.id, shape: "rounded", radius: "10", placeholder: "photo",
+            id: v.id, shape: "rounded", radius: "10", placeholder: "photo", static: "true",
             style: { width: "68px", height: "68px", flexShrink: 0, display: "block" }
           })}
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -2836,7 +2836,7 @@ function TutorialCard({ item, accent }) {
       transform: hov ? "translateY(-2px)" : "none", transition: "all .18s" }}>
       <div style={{ position: "relative" }}>
         {React.createElement("image-slot", {
-          id: item.id, shape: "rect", placeholder: "Tutorial thumbnail",
+          id: item.id, shape: "rect", placeholder: "Tutorial thumbnail", static: "true",
           style: { width: "100%", aspectRatio: "16 / 9", display: "block" }
         })}
         <span style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", pointerEvents: "none" }}>
@@ -2868,7 +2868,7 @@ function RecipeCard({ recipe, accent }) {
         {/* photo */}
         <div style={{ flex: "1 1 260px", minWidth: 0, position: "relative", background: "var(--cream-deep)" }}>
           {React.createElement("image-slot", {
-            id: recipe.imgId, shape: "rect", placeholder: "Labeled bouquet diagram",
+            id: recipe.imgId, shape: "rect", placeholder: "Labeled bouquet diagram", static: "true",
             style: { width: "100%", height: "100%", minHeight: "260px", display: "block" }
           })}
         </div>
@@ -2917,7 +2917,7 @@ function FamilyGlossary({ families, accent }) {
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 15, background: "var(--paper)",
           border: "1px solid var(--line)", borderRadius: "var(--radius)", padding: "12px 16px 12px 12px", boxShadow: "var(--shadow-sm)" }}>
             {React.createElement("image-slot", {
-            id: f.id, shape: "rounded", radius: "10", placeholder: "photo",
+            id: f.id, shape: "rounded", radius: "10", placeholder: "photo", static: "true",
             style: { width: "68px", height: "68px", flexShrink: 0, display: "block" }
           })}
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -2973,6 +2973,7 @@ function ShopCard({ item, accent }) {
         id: slotId,
         shape: "rect",
         placeholder: "Drop product photo",
+        static: "true",
         style: { width: "100%", aspectRatio: "4 / 3", display: "block" }
       })}
       {/* clickable shop link */}

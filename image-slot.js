@@ -292,7 +292,8 @@
     '  backdrop-filter:blur(6px)}' +
     '.ctl button:hover{background:rgba(0,0,0,.8)}' +
     '.err{position:absolute;left:8px;bottom:8px;right:8px;color:#b3261e;font-size:11px;' +
-    '  background:rgba(255,255,255,.85);padding:4px 6px;border-radius:5px;pointer-events:none}';
+    '  background:rgba(255,255,255,.85);padding:4px 6px;border-radius:5px;pointer-events:none}' +
+    ':host(:not([data-editable])) .empty{cursor:default}';
 
   const icon =
     '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
@@ -302,7 +303,7 @@
 
   class ImageSlot extends HTMLElement {
     static get observedAttributes() {
-      return ['shape', 'radius', 'mask', 'fit', 'position', 'placeholder', 'src', 'id'];
+      return ['shape', 'radius', 'mask', 'fit', 'position', 'placeholder', 'src', 'id', 'static'];
     }
 
     constructor() {
@@ -343,8 +344,12 @@
       this._subFn = () => this._render();
       // Shadow-DOM listeners live with the shadow DOM — bound once here so
       // disconnect/reconnect (e.g. React remount) doesn't stack handlers.
-      this._empty.addEventListener('click', () => this._input.click());
+      this._empty.addEventListener('click', () => {
+        if (this.hasAttribute('static')) return;
+        this._input.click();
+      });
       root.addEventListener('click', (e) => {
+        if (this.hasAttribute('static')) return;
         const act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
         if (act === 'replace') { this._exitReframe(true); this._input.click(); }
         if (act === 'clear') {
@@ -521,6 +526,7 @@
     // handleEvent — one listener object for all four drag events keeps the
     // add/remove symmetric and the depth counter correct.
     handleEvent(e) {
+      if (this.hasAttribute('static')) return;
       if (e.type === 'dragenter' || e.type === 'dragover') {
         // Without preventDefault the browser never fires 'drop'.
         e.preventDefault();
@@ -689,7 +695,7 @@
       this._ring.style.display = mask ? 'none' : '';
 
       // Controls and reframe entry gate on this so share links stay read-only.
-      const editable = !!(window.omelette && window.omelette.writeFile) || (window.BC_SUPABASE_CLIENT !== null);
+      const editable = (!!(window.omelette && window.omelette.writeFile) || (window.BC_SUPABASE_CLIENT !== null)) && !this.hasAttribute('static');
       this.toggleAttribute('data-editable', editable);
       this._sub.style.display = editable ? '' : 'none';
 
